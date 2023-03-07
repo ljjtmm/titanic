@@ -7,6 +7,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import cross_val_score
 
 #Load data
 training_data = pd.read_csv('datasets/titanic/train.csv')
@@ -44,3 +45,11 @@ y_train = training_data["Survived"]
 #Train a Random Forest classifier
 forest_clf = RandomForestClassifier(n_estimators=100, random_state=42)
 forest_clf.fit(X_train, y_train)
+
+#Create RF predictions
+X_test = preprocess_pipeline.transform(testing_data[numerical_attribs + categorical_attribs])
+y_pred = forest_clf.predict(X_test)
+
+#Find the mean of our predictions using cross-validation
+forest_scores = cross_val_score(forest_clf, X_train, y_train, cv=10)
+print(forest_scores.mean())
