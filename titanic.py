@@ -6,6 +6,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import RandomForestClassifier
 
 #Load data
 training_data = pd.read_csv('datasets/titanic/train.csv')
@@ -40,3 +41,6 @@ preprocess_pipeline = ColumnTransformer([
 X_train = preprocess_pipeline.fit_transform(training_data[numerical_attribs + categorical_attribs])
 y_train = training_data["Survived"]
 
+#Train a Random Forest classifier
+forest_clf = RandomForestClassifier(n_estimators=100, random_state=42)
+forest_clf.fit(X_train, y_train)
