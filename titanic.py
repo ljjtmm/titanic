@@ -35,3 +35,8 @@ preprocess_pipeline = ColumnTransformer([
         ("num", numerical_pipeline, numerical_attribs),
         ("cat", categorical_pipeline, categorical_attribs),
     ])
+
+#Define our training sets
+X_train = preprocess_pipeline.fit_transform(training_data[numerical_attribs + categorical_attribs])
+y_train = training_data["Survived"]
+
