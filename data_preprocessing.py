@@ -7,7 +7,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
 
-def preprocess_pipeline(training_file,testing_file, index_col, numerical_attribs, categorical_attribs):
+def preprocessing_pipeline(training_file, testing_file, index_col, numerical_attribs, categorical_attribs):
     #Load the data
     training_data = pd.read_csv(training_file)
     testing_data = pd.read_csv(testing_file)
@@ -33,12 +33,5 @@ def preprocess_pipeline(training_file,testing_file, index_col, numerical_attribs
             ("cat", categorical_pipeline, categorical_attribs),
         ])
     
-    return preprocess_pipeline
+    return training_data, testing_data, preprocess_pipeline
 
-training_file = 'datasets/titanic/train.csv'
-testing_file = 'datasets/titanic/test.csv'
-
-numerical_attribs = ["Age", "SibSp", "Parch", "Fare"]
-categorical_attribs = ["Pclass", "Sex", "Embarked"]
-
-preprocess_pipeline(training_file, testing_file, "PassengerId", numerical_attribs, categorical_attribs)
