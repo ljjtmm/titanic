@@ -52,4 +52,5 @@ y_pred = forest_clf.predict(X_test)
 
 #Find the mean of our predictions using cross-validation
 forest_scores = cross_val_score(forest_clf, X_train, y_train, cv=10)
-print(forest_scores.mean())
+print("Result of cross-validation for Random Foest model: ",forest_scores.mean()) #Returns 0.8137578027465668
+
