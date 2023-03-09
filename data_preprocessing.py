@@ -32,6 +32,8 @@ def preprocess_pipeline(training_file,testing_file, index_col, numerical_attribs
             ("num", numerical_pipeline, numerical_attribs),
             ("cat", categorical_pipeline, categorical_attribs),
         ])
+    
+    return preprocess_pipeline
 
 training_file = 'datasets/titanic/train.csv'
 testing_file = 'datasets/titanic/test.csv'
