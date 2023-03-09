@@ -8,6 +8,7 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
+from sklearn.svm import SVC
 
 #Load data
 training_data = pd.read_csv('datasets/titanic/train.csv')
@@ -54,3 +55,7 @@ y_pred = forest_clf.predict(X_test)
 forest_scores = cross_val_score(forest_clf, X_train, y_train, cv=10)
 print("Result of cross-validation for Random Foest model: ",forest_scores.mean()) #Returns 0.8137578027465668
 
+#Test a Support Vector Classifier
+svm_clf = SVC(gamma="auto")
+svm_scores = cross_val_score(svm_clf, X_train, y_train, cv=10)
+print("Mean of Support Vector Classififier model scores :",svm_scores.mean())
