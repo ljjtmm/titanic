@@ -2,10 +2,7 @@
 import pandas as pd
 import os
 from data_preprocessing import preprocessing_pipeline
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import cross_val_score
-from sklearn.svm import SVC
-from train_models import train_rfc
+from train_models import train_rfc, train_svc
 
 #Define our files
 training_file = 'datasets/titanic/train.csv'
@@ -27,10 +24,6 @@ X_train = pl.fit_transform(training_data[numerical_attribs + categorical_attribs
 y_train = training_data["Survived"]
 
 print(train_rfc(pl, training_file, testing_file, index_col, numerical_attribs, categorical_attribs))
+print(train_svc(pl, training_file, testing_file, index_col, numerical_attribs, categorical_attribs))
 
-
-# #Test a Support Vector Classifier
-# svm_clf = SVC(gamma="auto")
-# svm_scores = cross_val_score(svm_clf, X_train, y_train, cv=10)
-# print("Mean of Support Vector Classififier model scores :",svm_scores.mean()) #Returns 0.8249313358302123
 
