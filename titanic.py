@@ -1,46 +1,28 @@
 #Import relevant packages
 import pandas as pd
 import os
-from sklearn.pipeline import Pipeline
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.compose import ColumnTransformer
+from data_preprocessing import preprocess_pipeline
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVC
 
-#Load data
-training_data = pd.read_csv('datasets/titanic/train.csv')
-testing_data = pd.read_csv('datasets/titanic/test.csv')
+#Define our files
+training_file = 'datasets/titanic/train.csv'
+testing_file = 'datasets/titanic/test.csv'
 
-#Index the data
-training_data = training_data.set_index("PassengerId")
-testing_data = testing_data.set_index("PassengerId")
-
-#Create numerical pipeline
-numerical_pipeline = Pipeline([
-        ("imputer", SimpleImputer(strategy="median")),
-        ("scaler", StandardScaler())
-    ])
-
-#Create categorical pipeline
-categorical_pipeline = Pipeline([
-        ("imputer", SimpleImputer(strategy="most_frequent")),
-        ("cat_encoder", OneHotEncoder(sparse=False)),
-    ])
-
-#Define attribute types, and combine into a single pipeline
+#Categorise our attributes
 numerical_attribs = ["Age", "SibSp", "Parch", "Fare"]
 categorical_attribs = ["Pclass", "Sex", "Embarked"]
 
-preprocess_pipeline = ColumnTransformer([
-        ("num", numerical_pipeline, numerical_attribs),
-        ("cat", categorical_pipeline, categorical_attribs),
-    ])
+#Create our pipeline
+pl = preprocess_pipeline(training_file, testing_file, "PassengerId", numerical_attribs, categorical_attribs)
+
 
 #Define our training sets
-X_train = preprocess_pipeline.fit_transform(training_data[numerical_attribs + categorical_attribs])
+training_data = pd.read_csv(training_file)
+testing_data = pd.read_csv(testing_file)
+
+X_train = pl.fit_transform(training_data[numerical_attribs + categorical_attribs])
 y_train = training_data["Survived"]
 
 #Train a Random Forest classifier
@@ -48,7 +30,7 @@ forest_clf = RandomForestClassifier(n_estimators=100, random_state=42)
 forest_clf.fit(X_train, y_train)
 
 #Create RF predictions
-X_test = preprocess_pipeline.transform(testing_data[numerical_attribs + categorical_attribs])
+X_test = pl.transform(testing_data[numerical_attribs + categorical_attribs])
 y_pred = forest_clf.predict(X_test)
 
 #Find the mean of our predictions using cross-validation
@@ -58,4 +40,5 @@ print("Result of cross-validation for Random Foest model: ",forest_scores.mean()
 #Test a Support Vector Classifier
 svm_clf = SVC(gamma="auto")
 svm_scores = cross_val_score(svm_clf, X_train, y_train, cv=10)
-print("Mean of Support Vector Classififier model scores :",svm_scores.mean())
+print("Mean of Support Vector Classififier model scores :",svm_scores.mean()) #Returns 0.8249313358302123
+
